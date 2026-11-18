@@ -17,7 +17,8 @@ const route = express.Router();
 
 console.log('Book routes loaded');
 
-// 1. POST: Create a new book
+
+// 1. Create: POST / - Creates a new book using the data in req.body.
 route.post('/', async (req, res) => {
     try {
         const newBook = await Book.create(req.body);
@@ -34,5 +35,46 @@ route.post('/', async (req, res) => {
         });
     }
 });
+
+
+// 2. Read All: GET / - Retrieves all books from the database
+route.get('/', async (req, res) => {
+    try {
+        const response = await Book.find({});
+        console.log('successfully retrieved books');
+
+        // res.json(response) =====> return JSON
+        // res.status(200).json(response) ====> Sets HTTP 200 and returns JSON.
+
+        res.status(200).json(response)
+    } catch (err) {
+        console.error('failed to retrieve books:', err);
+        res.status(400).json({ error: 'failed to fetch books', details: err.message });
+    }
+});
+
+
+// Read One: GET /:id - Retrieves a single book by its _id.
+route.get('/:id', async (req, res) => {
+    try {
+        const id = req.params.id;
+        console.log(req.params);
+
+        const singleBook = await Book.findById(id);
+        if (!singleBook) {
+            return res.status(404).json({
+                error: 'book not found'
+            });
+
+        }
+        console.log('successfully retrieved a book');
+        res.status(200).json(singleBook);
+
+    } catch (err) {
+        console.error('failed to retrieve singular book', err);
+        res.status(400).json({ error: 'cannot retrieve book', details: err.message });
+    }
+})
+
 
 export default route;
