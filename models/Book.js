@@ -25,7 +25,7 @@ const bookSchema = new Schema({
         type: String,
         unique: true      
     },
-    publicationDate: Date,
+    publishedDate: Date,
     inStock: {
         type: Boolean,
         default: true

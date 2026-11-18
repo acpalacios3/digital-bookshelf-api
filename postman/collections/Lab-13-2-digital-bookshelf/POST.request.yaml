@@ -1,0 +1,19 @@
+$kind: http-request
+url: http://localhost:3000/api/books
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \    \"title\": \"YUup\",\r
+
+    \    \"author\": \"Dude\",\r
+
+    \    \"isbn\": \"4\",\r
+
+    \    \"publishedDate\": \"2024-06-19T14:32:18.003Z\",\r
+
+    \    \"inStock\": true\r
+
+    }"
+order: 1000
