@@ -84,7 +84,7 @@ route.get('/:id', async (req, res) => {
 
 route.put('/:id', async (req, res) => {
 
-     try{
+    try {
         // req.params.id : gets the ID from the URL.
         const id = req.params.id;
         const body = req.body;
@@ -103,7 +103,39 @@ route.put('/:id', async (req, res) => {
         res.status(400).json({ error: 'failed to update book', details: err.message });
     }
 
-    });
+});
 
+
+// Delete: DELETE /:id - Deletes a book by its _id.
+Test: http://localhost:3000/api/books/delete/6afd18def0d56104711f8d9f
+route.delete('/delete/:id', async (req, res) => {
+
+    try {
+        // req.params.id : gets the ID from the URL.
+        const id = req.params.id;
+
+        // findByIdAndDelete: look for and delete the book
+        const deleteBook = await Book.findByIdAndDelete(id);
+
+        if (!deleteBook) {
+
+            return res.status(404).json({
+                message: 'Book not found'
+            });
+        }
+        console.log('Successfully deleted a book');
+        // Correctly finds a book by ID and deletes it. Returns a confirmation message.
+        res.status(200).json({
+            message: 'Book successfully deleted',
+            deletedBook: deleteBook
+        });
+
+    } catch {
+
+        console.error('Could not delete book', err);
+        res.status(400).json({ error: 'Failed to delete book', details: err.message });
+    }
+
+})
 
 export default route;
