@@ -18,7 +18,8 @@ const route = express.Router();
 console.log('Book routes loaded');
 
 
-// 1. Create: POST / - Creates a new book using the data in req.body.
+// Create: POST / - Creates a new book using the data in req.body.
+// Test: http://localhost:3000/api/books
 route.post('/', async (req, res) => {
     try {
         const newBook = await Book.create(req.body);
@@ -37,7 +38,8 @@ route.post('/', async (req, res) => {
 });
 
 
-// 2. Read All: GET / - Retrieves all books from the database
+// Read All: GET / - Retrieves all books from the database
+// Test:http://localhost:3000/api/books
 route.get('/', async (req, res) => {
     try {
         const response = await Book.find({});
@@ -55,6 +57,7 @@ route.get('/', async (req, res) => {
 
 
 // Read One: GET /:id - Retrieves a single book by its _id.
+// Test: http://localhost:3000/api/books/6afd18def0d56104711f8d9f
 route.get('/:id', async (req, res) => {
     try {
         const id = req.params.id;
@@ -75,6 +78,32 @@ route.get('/:id', async (req, res) => {
         res.status(400).json({ error: 'cannot retrieve book', details: err.message });
     }
 })
+
+//  Update: PUT /:id - Updates a book by its _id using the data in req.body.
+// Test: http://localhost:3000/api/books/6afd18def0d56104711f8d9f
+
+route.put('/:id', async (req, res) => {
+
+     try{
+        // req.params.id : gets the ID from the URL.
+        const id = req.params.id;
+        const body = req.body;
+
+        // findByIdAndUpdate(): finds the book and updates it.
+        // returnDocument: 'after' : returns the document after updating it.
+        const updateBook = await Book.findByIdAndUpdate(id, body, { returnDocument: 'after' });
+        console.log('successfully updated a book');
+
+        // 200 (successful operation)
+        res.status(200).json(updateBook);
+
+    } catch (err) {
+        console.error('Could not update book:', err);
+        // 400 (Bad Request)
+        res.status(400).json({ error: 'failed to update book', details: err.message });
+    }
+
+    });
 
 
 export default route;
